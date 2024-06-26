@@ -1,63 +1,75 @@
 const project = require('../model/project')
-const post = require('../model/project')
 const UserController = require('./user')
 
 class projectController {
-    async createProject(nome, descrisao) {
-        if(!nome || !descrisao) {
-            throw new Error('Nome ou descrisao sao obrigatorios.')
+    async createProject(nome, descrisao, userId) {
+        if(!nome || !descrisao || !userId) {
+            throw new Error('Nome, descrisao e userId sao obrigatorios.')
         }
 
-    const projectValue = await post.create({
+    const projectValue = await project.create({
         nome,
-        descrisao
+        descrisao,
+        userId
     })
 
     return projectValue
     }
 
-    async findPost(id) {
+    async findProject(id) {
         if (!id) {
             throw new Error('Id é obrigatório.')
         }
 
-        const projectValue = await post.findByPk(id)
+        const projectValue = await project.findByPk(id)
         
         if (!projectValue) {
-            throw new Error('Postagem não encontrada.')
+            throw new Error('Projeto não encontrada.')
         }
 
         return projectValue
     }
 
-    async editar(id, nome, descrisao) {
-        if (!id || !nome || !descrisao) {
-            throw new Error('Id, nome e descisao são obrigatorios.')
+    async updateProject(id, nome, descrisao, userId) {
+        if (!id || !nome || !descrisao || !userId) {
+            throw new Error('Id, nome, descisao e userId são obrigatorios.')
         }
 
-        await UserController.findUser(id)
+        await UserController.findUser(userId)
 
-        const projectValue = await this.findPost(id)
+        const projectValue = await this.findProject(id)
 
         projectValue.nome = nome
         projectValue.descrisao = descrisao
+        projectValue.userId = userId
         projectValue.save()
 
         return projectValue
     }
 
-    async deletar(id) {
-        if (!id) {
-            throw new Error('Id é obrigatorio')
+    async deleteProject(id, userId) {
+        if (!id || !userId) {
+            throw new Error('Id e userId são obrigatorio')
         }
-        const projectValue = await this.findPost(id)
-        projectValue.destroy()
+        const projectValue = await this.findProject(id)
 
-        return
+        if (projectValue.userID !== userId) {
+            throw new Error('Usuario nao autorizado.')
+        }
+
+        await projectValue.destroy()
     }
 
-    async find() {
-        return project.findAll()
+    async find(userId) {
+        if (!userId) {
+            throw new Error('Usuario ID é obrigatorio.')
+        }
+
+        return project.findAll({
+            where: {
+                userId: userId
+            }
+        })
     }
 }
     module.exports = new projectController()

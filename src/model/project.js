@@ -13,6 +13,9 @@ class Project {
             descrisao: {
                 type: database.db.Sequelize.STRING
             },
+            userId: {
+                type: database.db.Sequelize.INTEGER
+            }
         })
     }
 }
