@@ -38,14 +38,26 @@ class ProjectApi {
         }
     }
 
-    async findProject(req, res) {
-        const userId = req.userId
+    async ListarProjetos(req, res) {
+        const { userId } = req.params;
+ 
+        try {
+            const projects = await projectController.ListarProjetos(userId);
+            return res.status(200).send(projects);
+        } catch (error) {
+            return res.status(400).send({ error: error.message });
+        }
+    }
 
-        try{
-            const projects = await projectController.find(userId)
-            return res.status(200).send(projects)
-        } catch (e) {
-            return res.status(400).send({ error: `Erro ao listar projetos ${e.message}`})
+    // Método para validar o token
+    async validarToken(req, res, next) {
+        const token = req.headers.authorization;
+
+        try {
+            await controller.validarToken(token);
+            next();
+        } catch (error) {
+            return res.status(400).send({ error: error.message })
         }
     }
 }

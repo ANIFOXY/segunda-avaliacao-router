@@ -4,6 +4,8 @@ const database = require('./database/db')
 const UserApi = require('./api/user')
 const UserRouter = require('./routes/user')
 const PostRouter = require('./routes/post')
+const ProjectRouter = require('./routes/project')
+
 
 const app = express()
 app.use(express.json());
@@ -23,6 +25,7 @@ app.post('/api/v1/user', UserApi.createUser)
 app.use(UserApi.validateToken)
 app.use('/api/v1/user', UserRouter)
 app.use('/api/v1/post', PostRouter)
+app.use('/api/v1/project',ProjectRouter)
 
 database.db.sync({ force: true })
     .then(_ => {

@@ -1,5 +1,4 @@
 const project = require('../model/project')
-const UserController = require('./user')
 
 class projectController {
     async createProject(nome, descrisao, userId) {
@@ -16,28 +15,12 @@ class projectController {
     return projectValue
     }
 
-    async findProject(id) {
-        if (!id) {
-            throw new Error('Id é obrigatório.')
-        }
-
-        const projectValue = await project.findByPk(id)
-        
-        if (!projectValue) {
-            throw new Error('Projeto não encontrada.')
-        }
-
-        return projectValue
-    }
-
     async updateProject(id, nome, descrisao, userId) {
         if (!id || !nome || !descrisao || !userId) {
             throw new Error('Id, nome, descisao e userId são obrigatorios.')
         }
 
-        await UserController.findUser(userId)
-
-        const projectValue = await this.findProject(id)
+        const projectValue = await this.findByPk(id)
 
         projectValue.nome = nome
         projectValue.descrisao = descrisao
@@ -47,29 +30,36 @@ class projectController {
         return projectValue
     }
 
-    async deleteProject(id, userId) {
-        if (!id || !userId) {
-            throw new Error('Id e userId são obrigatorio')
+    async deleteProject(id) {
+        if (!id) {
+            throw new Error('Id é obrigatorio')
         }
-        const projectValue = await this.findProject(id)
+        const projectValue = await this.findByPk(id)
 
-        if (projectValue.userID !== userId) {
-            throw new Error('Usuario nao autorizado.')
+        if (!projectValue) {
+            throw new Error('Projeto nao encontrado.')
         }
 
         await projectValue.destroy()
     }
 
-    async find(userId) {
+    async ListarProjetos(userId) {
         if (!userId) {
-            throw new Error('Usuario ID é obrigatorio.')
+            throw new Error('Id do autor é obrigatório');
         }
 
-        return project.findAll({
-            where: {
-                userId: userId
+        const projects = await project.findAll({ where: { autorId } });
+        return projects;
+    }
+
+    async validarToken(token) {
+        try {
+            if (!token) {
+                throw new Error('Token não fornecido');
             }
-        })
+        } catch (error) {
+            throw new Error('Erro na validação do token: ' + error.message);
+        }
     }
 }
     module.exports = new projectController()

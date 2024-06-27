@@ -1,5 +1,4 @@
 const express = require('express')
-
 const UserApi = require('../api/user')
 const router = express.Router()
 
