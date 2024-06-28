@@ -2,11 +2,11 @@ const projectController = require('../controller/project')
 
 class ProjectApi {
     async createProject(req, res) {
-        const { nome, descrisao } = req.body
+        const { nome, descricao } = req.body
         const userId = req.userId
 
         try {
-            const project = await projectController.createProject(nome, descrisao, userId)
+            const project = await projectController.createProject(nome, descricao, userId)
             return res.status(201).send(project)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao criar projeto ${e.message}`})
@@ -54,7 +54,7 @@ class ProjectApi {
         const token = req.headers.authorization;
 
         try {
-            await controller.validarToken(token);
+            await projectController.validarToken(token);
             next();
         } catch (error) {
             return res.status(400).send({ error: error.message })

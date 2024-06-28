@@ -5,16 +5,35 @@ class Project {
         this.model = database.db.define('project', {
             id: {
                 type: database.db.Sequelize.INTEGER,
-                primaryKey: true
+                primaryKey: true,
+                autoIncrement: true
             },
             nome: {
-                type: database.db.Sequelize.STRING
+                type: database.db.Sequelize.STRING,
+                validate: {
+                    notEmpty: {
+                        msg: 'Nome é obrigatorio'
+                    },
+                    len: {
+                        args: [0, 100],
+                        msg: 'Nome deve ter no maximo 100 caracteres'
+                    }
+                }
             },
             descrisao: {
-                type: database.db.Sequelize.STRING
+                type: database.db.Sequelize.STRING,
+                validate: {
+                    notEmpty: {
+                        msg: 'Descrição é obrigatoria'
+                    }
+                }
             },
             userId: {
-                type: database.db.Sequelize.INTEGER
+                type: database.db.Sequelize.INTEGER,
+                references: {
+                    model: 'users',
+                    key: 'id'
+                }
             }
         })
     }

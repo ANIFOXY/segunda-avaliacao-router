@@ -2,13 +2,13 @@ const user = require('../model/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
-const SECRET_KEY = 'segundaavaliacao'
+const SECRET_KEY = 'terceiraavaliacao'
 const SALT_VALUE = 10
 
 // Faz a criação de um novo usuario e traz um erro caso tenha campos vazios
 class UserController {
     async createUser(nome, email, senha) {
-        if (nome === undefined || email === undefined || senha === undefined) {
+        if (!nome || !email || !senha) {
             throw new Error('Nome, email e senha são obrigatórios.')
         }
 
@@ -31,7 +31,7 @@ class UserController {
     }
 
     async findUser(id) {
-        if (id === undefined) {
+        if (!id) {
             throw new Error('Id é obrigatório.')
         }
 
@@ -45,7 +45,7 @@ class UserController {
     }
 
     async update(id, nome, email, senha) {
-        if (id === undefined || nome === undefined || email === undefined || senha === undefined) {
+        if (!id || !nome || !email || !senha) {
             throw new Error('Id, Nome, email e senha são obrigatórios.')
         }
 
@@ -60,13 +60,11 @@ class UserController {
     }
 
     async delete(id) {
-        if (id === undefined) {
+        if (!id) {
             throw new Error('Id é obrigatório.')
         }
         const userValue = await this.findUser(id)
-        userValue.destroy()
-
-        return
+         await userValue.destroy()
     }
 
     async find() {
@@ -75,19 +73,19 @@ class UserController {
 
     // Serve para fazer login com e email e senha do usuario, ele vai retornar error se os campos estiferem vazios
     async login(email, senha) {
-        if (email === undefined || senha === undefined) {
+        if (!email || !senha) {
             throw new Error('Email e senha são obrigatórios.')
         }
 
         const userValue = await user.findOne({ where: { email }})
 
         if (!userValue) {
-            throw new Error('[1] Usuário e senha inválidos.')
+            throw new Error('[1] Email inválidos.')
         }
 
         const senhaValida = bcrypt.compare(senha, userValue.senha) 
         if (!senhaValida) {
-            throw new Error('[2] Usuário e senha inválidos.')
+            throw new Error('[2] Senha inválidos.')
         }
 
         const jwtToken = jwt.sign({ id: userValue.id }, SECRET_KEY);
