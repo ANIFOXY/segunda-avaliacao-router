@@ -1,5 +1,7 @@
 const task = require('../model/task')
 const projectController = require('./project')
+const UserController = require('../controller/user')
+const user = require('../model/user')
 
 class TaskController {
     async createTask(titulo, descrisao, projectId, userId) {
@@ -7,6 +9,9 @@ class TaskController {
             throw new Error('Titulo, descrisao, projectId e userId sao obrigatorios')
         }
 
+
+        await UserController.findUser(Number(userId))
+        
         if (titulo.length > 100) {
             throw new Error('Titulo deve ter no maximo 100 caracteres')
         }

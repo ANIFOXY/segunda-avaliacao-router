@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { SECRE_KEY } = require('../controller/user')
+const UserController = require('../controller/user')
 
 const { JsonWebTokenError } = require('jsonwebtoken')
 const project = require('../model/project')
@@ -10,6 +11,8 @@ class projectController {
             throw new Error('Nome, descrisao e userId sao obrigatorios.')
         }
 
+        await UserController.findUser(Number(userId))
+        
         if (nome.length > 100) {
             throw new Error('Nome deve ter no maximo 100 caracteres')
         }
