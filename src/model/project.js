@@ -20,7 +20,7 @@ class Project {
                     }
                 }
             },
-            descrisao: {
+            descricao: {
                 type: database.db.Sequelize.STRING,
                 validate: {
                     notEmpty: {

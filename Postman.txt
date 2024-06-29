@@ -1,0 +1,48 @@
+1 Exemplo
+
+POST user
+{
+    "nome":"joao",
+    "email":"joao@gmail.com",
+    "senha":"12345678"
+}
+
+POST login
+{
+    "nome":"joao",
+    "email":"joao@gmail.com",
+    "senha":"12345678"
+}
+
+POST project
+{
+    "nome":"Terra",
+    "descricao":"Novo Mundo",
+    "userId": 1
+}
+
+GET project/1
+
+PUT project/1
+{
+    "nome":"Terra",
+    "descricao":"Planeta Terra",
+    "userId": 1
+}
+
+
+2 Exemplo
+
+POST user
+{
+    "nome":"Maria",
+    "email":"maria@gmail.com",
+    "senha": "54321"
+}
+
+POST project
+{
+    "nome":"Comidas",
+    "descricao":"Receitas",
+    "userId": 2
+}

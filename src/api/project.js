@@ -2,9 +2,8 @@ const projectController = require('../controller/project')
 
 class ProjectApi {
     async createProject(req, res) {
-        const { nome, descricao } = req.body
-        const userId = req.userId
-
+        const { nome, descricao, userId } = req.body
+        
         try {
             const project = await projectController.createProject(nome, descricao, userId)
             return res.status(201).send(project)
@@ -15,11 +14,10 @@ class ProjectApi {
 
     async updateProject(req, res) {
         const { id } = req.params
-        const { nome, descrisao } = req.body
-        const userId = req.userId
+        const { nome, descricao, userId } = req.body
 
         try {
-            const project = await projectController.updateProject(Number(id), nome, descrisao, userId)
+            const project = await projectController.updateProject(Number(id), nome, descricao, userId)
             return res.status(200).send(project)
         } catch (e) {
             return res.status(400).send({ error: `Error ao editar projeto ${e.message}`})

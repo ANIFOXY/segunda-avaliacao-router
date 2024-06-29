@@ -6,20 +6,20 @@ const { JsonWebTokenError } = require('jsonwebtoken')
 const project = require('../model/project')
 
 class projectController {
-    async createProject(nome, descrisao, userId) {
-        if(!nome || !descrisao || !userId) {
-            throw new Error('Nome, descrisao e userId sao obrigatorios.')
+    async createProject(nome, descricao, userId) {
+        if(!nome || !descricao || !userId) {
+            throw new Error('Nome, descricao e userId sao obrigatorios.')
         }
 
         await UserController.findUser(Number(userId))
         
-        if (nome.length > 100) {
+          if (nome.length > 100) {
             throw new Error('Nome deve ter no maximo 100 caracteres')
-        }
+       }
 
     const projectValue = await project.create({
         nome,
-        descrisao,
+        descricao,
         userId
     })
 
@@ -40,10 +40,13 @@ class projectController {
         return projectValue
     }
 
-    async updateProject(id, nome, descrisao, userId) {
-        if (!id || !nome || !descrisao || !userId) {
-            throw new Error('Id, nome, descrisao e userId são obrigatorios.')
+    async updateProject(id, nome, descricao, userId) {
+        if (!id || !nome || !descricao || !userId) {
+            throw new Error('Id, nome, descricao e userId são obrigatorios.')
         }
+
+        await UserController.findUser(Number(userId))
+
 
         if (nome.length > 100) {
             throw new Error('Nome deve ter no maximo 100 caracteres')
@@ -56,16 +59,19 @@ class projectController {
         }
 
         projectValue.nome = nome
-        projectValue.descrisao = descrisao
+        projectValue.descricao = descricao
+        projectValue.userId = userId
         projectValue.save()
 
         return projectValue
     }
 
     async deleteProject(id, userId) {
-        if (!id) {
+        if (!id || !userId) {
             throw new Error('Id é obrigatorio')
         }
+
+        await UserController.findUser(Number(userId))
 
         const projectValue = await this.findProject(id)
 
@@ -77,12 +83,14 @@ class projectController {
             throw new Error('Voce nao tem autorizacao de deletar esse projeto')
         }
 
+        projectValue.userId = userId
+
         await projectValue.destroy()
     }
 
     async ListarProjetos(userId) {
         if (!userId) {
-            throw new Error('Id do autor é obrigatório');
+            throw new Error('Id do user é obrigatório');
         }
 
         const projects = await project.findAll({ where: { userId } })
