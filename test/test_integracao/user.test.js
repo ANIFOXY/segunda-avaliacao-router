@@ -3,7 +3,7 @@ const ServicoUsuario = require("../../src/controller/user");
 const conexao = require("../../src/database/db");
 
 describe('Testes do primeiro exercício', () => {
-   const user = new ServicoUsuario()
+   const user =  ServicoUsuario()
    beforeAll(async () => {
       user = new ServicoUsuario();
       this.transaction = await conexao.transaction();
