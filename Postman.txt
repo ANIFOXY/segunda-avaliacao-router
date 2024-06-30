@@ -46,3 +46,20 @@ POST project
     "descricao":"Receitas",
     "userId": 2
 }
+
+POST task
+{
+  "titulo": "Tarefa de Teste",
+  "descrisao": "Descrição da tarefa de teste",
+  "projectId": 1,
+  "userId": 1
+}
+
+PUT task/1
+{
+  "titulo": "Novo Título da Tarefa",
+  "descrisao": "Nova descrição da tarefa",
+  "status": "concluido",
+  "conclusaoData": "2024-06-30",
+  "userId": 1
+}

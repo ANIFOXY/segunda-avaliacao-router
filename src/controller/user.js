@@ -64,11 +64,17 @@ class UserController {
             throw new Error('Id é obrigatório.')
         }
         const userValue = await this.findUser(id)
-         await userValue.destroy()
+
+        if(!userValue) {
+            throw new Error('User nao encontrado')
+        }
+
+        await userValue.destroy()
     }
 
     async find() {
-        return user.findAll()
+        const users = await user.findAll()
+        return users
     }
 
     // Serve para fazer login com e email e senha do usuario, ele vai retornar error se os campos estiferem vazios
@@ -83,7 +89,7 @@ class UserController {
             throw new Error('[1] Email inválidos.')
         }
 
-        const senhaValida = bcrypt.compare(senha, userValue.senha) 
+        const senhaValida = await bcrypt.compare(senha, userValue.senha) 
         if (!senhaValida) {
             throw new Error('[2] Senha inválidos.')
         }

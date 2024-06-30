@@ -26,11 +26,11 @@ class ProjectApi {
 
     async deleteProject(req, res) {
         const { id } = req.params
-        const userId = req.userId
+        const { userId } = req.body
 
         try {
             await projectController.deleteProject(Number(id), userId)
-            return res.status(204).send()
+            return res.status(204).send({ message: 'Projeto deletado com sucesso' })
         } catch (e) {
             return res.status(400).send({ error: `Erro ao deletar projeto ${e.message}`})
         }

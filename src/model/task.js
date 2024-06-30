@@ -21,7 +21,7 @@ class Task {
                     }
                 }
             },
-            descrisao: {
+            descricao: {
                 type: database.db.Sequelize.STRING,
             },
             status: {
@@ -34,7 +34,7 @@ class Task {
                 defaultValue: database.db.Sequelize.NOW
             },
             conclusaoData: {
-                type: database.db.Sequelize.INTEGER,
+                type: database.db.Sequelize.DATE,
             },
             projectId: {
                 type: database.db.Sequelize.INTEGER,

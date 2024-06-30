@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken')
-const { SECRE_KEY } = require('../controller/user')
+const { SECRET_KEY } = require('../controller/user')
 const UserController = require('../controller/user')
-
-const { JsonWebTokenError } = require('jsonwebtoken')
 const project = require('../model/project')
 
 class projectController {
@@ -61,7 +59,7 @@ class projectController {
         projectValue.nome = nome
         projectValue.descricao = descricao
         projectValue.userId = userId
-        projectValue.save()
+         await projectValue.save()
 
         return projectValue
     }
@@ -83,8 +81,6 @@ class projectController {
             throw new Error('Voce nao tem autorizacao de deletar esse projeto')
         }
 
-        projectValue.userId = userId
-
         await projectValue.destroy()
     }
 
@@ -103,7 +99,7 @@ class projectController {
         }
 
         try {
-                await jwt.verify(token, SECRE_KEY)
+                await jwt.verify(token, SECRET_KEY)
         } catch (error) {
             throw new Error('Erro na validação do token: ' + error.message);
         }

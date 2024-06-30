@@ -34,7 +34,7 @@ class UserApi {
             return res.status(400).send({ error: `Erro ao deletar usuário ${e.message}`})
         }
     }
-
+    // ListUsers
     async findUsers(req, res) {
         try {
             const users = await UserController.find()
@@ -47,12 +47,16 @@ class UserApi {
     async login(req, res) {
         const { email, senha } = req.body
 
+        if (!email || !senha) {
+            return res.status(400).send({ error: 'Email e senha sao obrigatorios' })
+        }
+
         try {
             const token = await UserController.login(email, senha)
 
             res.status(200).send({ token })
         } catch (e) {
-            res.status(400).send({ error: e.message })
+            res.status(400).send({ error: `Erro ao fazer login: ${e.message}`})
         }
     }
 
@@ -63,7 +67,7 @@ class UserApi {
             await UserController.validateToken(token)
             next()
         } catch (e) {
-            res.status(400).send({ error: e.message })
+            res.status(400).send({ error: `Erro na validação do token: ${e.message}`})
         }
     }
 }

@@ -1,10 +1,9 @@
 const TaskController = require('../controller/task')
-const task = require('../model/task')
+const Task = require('../model/task')
 
 class TaskApi {
     async createTask(req, res) {
-        const { titulo, descrisao, projectId } = req.body
-        const userId = req.userId
+        const { titulo, descrisao, projectId, userId } = req.body
 
         try {
             const task = await TaskController.createTask(titulo, descrisao, projectId, userId)
@@ -16,8 +15,7 @@ class TaskApi {
 
     async updateTask(req, res) {
         const { id } = req.params
-        const { titulo, descrisao, status, conclusaoData } = req.body
-        const userId = req.userId
+        const { titulo, descrisao, status, conclusaoData, userId } = req.body
 
         try { 
             const task = await TaskController.updateTask(Number(id), titulo, descrisao, status, conclusaoData, userId)
@@ -29,22 +27,26 @@ class TaskApi {
 
     async deleteTask(req, res) {
         const { id } = req.params
-        const { userId } = req.userId
+        const { userId } = req.body
 
         try {
             await TaskController.deleteTask(Number(id), userId)
             return res.status(204).send()
         } catch (e) {
-            return res.status(400).send({ error: `Erro ao deletar Task`})
+            return res.status(400).send({ error: `Erro ao deletar Task: ${e.message}` })
         }
     }
 
     async ListarTasks(req,res) {
-        const { projectId } = req.params
+        const { projectId, userId } = req.params
         const { status } = req.query
-        const userId = req.userId
 
         try {
+
+            if(!projectId || !userId) {
+                throw new Error('ProjectId e userId sao obrigatorios')
+            }
+
             const tasks = await TaskController.ListarTasks(Number(projectId), userId, status)
             return res.status(200).send(tasks)
         } catch (e) {
