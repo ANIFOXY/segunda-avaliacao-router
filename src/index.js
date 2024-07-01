@@ -1,37 +1,14 @@
-const express = require('express')
-const cors = require('cors')
-const database = require('./database/db')
-const UserApi = require('./api/user')
-const UserRouter = require('./routes/user')
-const ProjectRouter = require('./routes/project')
-const TaskRouter = require('./routes/task')
+const app = require('./app'); // Importa o app Express
+const database = require('./database/db');
 
-const app = express()
-app.use(express.json());
-
-//Set use cors
-app.use(cors());
-
-app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hello World' })
-})
-
-// Rotas sem token
-app.post('/api/v1/login', UserApi.login)
-app.post('/api/v1/user', UserApi.createUser)
-
-// Rotas com token
-app.use(UserApi.validateToken)
-app.use('/api/v1/user', UserRouter)
-app.use('/api/v1/project', ProjectRouter)
-app.use('/api/v1/task', TaskRouter)
-
+// Sincroniza o banco de dados
 database.db.sync({ force: true })
-    .then(_ => {
-        app.listen(8000, _ => {
-            console.log('Server running on port 8000')
-        })
+    .then(() => {
+        // Inicia o servidor
+        app.listen(8000, () => {
+            console.log('Server running on port 8000');
+        });
     })
-    .catch(e => {
-        console.error(`Erro ao inicializar o banco de dados ${e}`)
-    })
+    .catch(err => {
+        console.error('Erro ao inicializar o banco de dados:', err);
+    });

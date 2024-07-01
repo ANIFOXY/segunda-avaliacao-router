@@ -1,11 +1,10 @@
-const { describe, expect, it, beforeAll, afterAll } = require('@jest/globals');
+const { describe, expect, it, beforeAll, afterAll, rollback } = require('@jest/globals');
 const ServicoUsuario = require("../../src/controller/user");
 const conexao = require("../../src/database/db");
 
 describe('Testes do primeiro exercício', () => {
-   const user =  ServicoUsuario()
+   
    beforeAll(async () => {
-      user = new ServicoUsuario();
       this.transaction = await conexao.transaction();
    });
    afterAll(() => {

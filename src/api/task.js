@@ -1,5 +1,4 @@
 const TaskController = require('../controller/task')
-const Task = require('../model/task')
 
 class TaskApi {
     async createTask(req, res) {
@@ -53,6 +52,7 @@ class TaskApi {
             return res.status(400).send({ error: `Erro ao listar Task: ${e.message}`})
         }
     }
+
 }
 
 module.exports = new TaskApi()

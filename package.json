@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js",
-    "test": "jest test/**/*.test.js"
+    "test": "jest --coverage"
   },
   "author": "Jackson Machado",
   "license": "ISC",
