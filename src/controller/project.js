@@ -93,17 +93,6 @@ class projectController {
         return projects
     }
 
-    async validarToken(token) {
-        if (!token) {
-            throw new Error('Token não fornecido');
-        }
-
-        try {
-                await jwt.verify(token, SECRET_KEY)
-        } catch (error) {
-            throw new Error('Erro na validação do token: ' + error.message);
-        }
-    }
 }
 
 module.exports = new projectController()
