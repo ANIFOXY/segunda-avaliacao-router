@@ -19,7 +19,6 @@ app.post('/api/v1/login', UserApi.login);
 app.post('/api/v1/user', UserApi.createUser);
 
 app.use(UserApi.validateToken);
-app.use(ProjectApi.validarToken);
 
 app.use('/api/v1/user', UserRouter);
 app.use('/api/v1/project', ProjectRouter);
