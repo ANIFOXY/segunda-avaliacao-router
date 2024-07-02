@@ -6,6 +6,7 @@ class UserApi {
 
         try {
             const user = await UserController.createUser(nome, email, senha)
+            console.log("criado com sucesso")
             return res.status(201).send(user)
         } catch (e) {
             return res.status(400).send({ error: `Erro ao criar usuário ${e.message}`})

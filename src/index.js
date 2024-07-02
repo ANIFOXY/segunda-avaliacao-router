@@ -1,10 +1,8 @@
-const app = require('./app'); // Importa o app Express
+const app = require('./app');
 const database = require('./database/db');
 
-// Sincroniza o banco de dados
 database.db.sync({ force: true })
     .then(() => {
-        // Inicia o servidor
         app.listen(8000, () => {
             console.log('Server running on port 8000');
         });

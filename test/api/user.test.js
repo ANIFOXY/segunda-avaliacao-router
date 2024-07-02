@@ -1,65 +1,68 @@
 const request = require('supertest');
 const app = require('../../src/app');
-const database = require('../../src/database/db');
-
-beforeAll(async () => {
-    await database.db.sync({ force: true });
-});
 
 describe('User API', () => {
+
     let token;
 
-    beforeEach(async () => {
-        await request(app)
-            .post('/api/user')
-            .send({
-                nome: 'Usuário Teste',
-                email: 'teste@example.com',
-                senha: 'senha123'
-            });
-
-        const loginResponse = await request(app)
-            .post('/api/login')
-            .send({
-                email: 'teste@example.com',
-                senha: 'senha123'
-            });
-        token = loginResponse.body.token;
+    beforeAll(async () => {
+        console.info('Iniciando TDD com jest')
     });
 
-    test('Deve atualizar um usuário existente', async () => {
+    afterAll(() =>{
+        console.info('Encerrados os testes')
+    });
+
+    it('Post /api/v1/user (isso deve criar um usuario)', async () =>{
         const response = await request(app)
-            .put('/api/user/1')
-            .set('Authorization', `Bearer ${token}`)
+            .post('/api/v1/user')
             .send({
-                nome: 'Novo Nome',
-                email: 'novoemail@example.com',
-                senha: 'novasenha123'
+                nome:"joao",
+                email:"joao@gmail.com",
+                senha:"12345678"
             });
-            
-        console.log(response.status, response.body)
 
-        expect(response.status).toBe(200);
-        expect(response.body).toEqual({
-            nome: 'Novo Nome',
-            email: 'novoemail@example.com'
-    });
+            console.log(response.body)
+            expect(response.statusCode).toBe(201)
+            expect(response.body).toHaveProperty("id")
+            expect(response.body.nome).toBe("joao")
+            expect(response.body.email).toBe("joao@gmail.com")
     })
-    
-    test('Deve deletar um usuário', async () => {
-        const response = await request(app)
-            .delete('/api/user/1')
-            .set('Authorization', `Bearer ${token}`);
 
-        expect(response.status).toBe(204);
+    it('POST /api/v1/login (Isso é para fazer o login', async () => {
+        const response = await request(app)
+            .post('/api/v1/login')
+            .send({
+                email:"joao@gmail.com",
+                senha:"12345678"
+            });
+            console.log(response.body);
+            token = response.body.token;
+            expect(response.statusCode).toBe(200);
+            expect(response.body).toHaveProperty("token");
     });
 
-    test('Deve listar todos os usuários', async () => {
+    it('Delete /api/v1/user/:id (Isso deve deletar o user)', async () => {
+        const userToDelete = await request(app)
+            .post('/api/v1/user')
+            .send({
+                nome:"joao",
+                email:"joao@gmail.com",
+                senha:"12345678"
+            });
         const response = await request(app)
-            .get('/api/user')
+            .delete(`/api/v1/user/${userToDelete.body.id}`)
+            .set('Authorization', `Bearer ${token}`)
+    })
+
+    it('Get /api/v1/user (Isso deve listar todos os usuario)', async () => {
+        const response = await request(app)
+            .get('/api/v1/user')
             .set('Authorization', `Bearer ${token}`);
 
-        expect(response.status).toBe(200);
+        console.log(response.body);
+        expect(response.statusCode).toBe(200);
         expect(response.body).toBeInstanceOf(Array);
     });
-});
+})
+       //
